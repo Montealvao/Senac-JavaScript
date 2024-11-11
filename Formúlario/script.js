@@ -18,31 +18,42 @@ function showSucess(input){
 }
 
 function checkLength(input,min,max){
+    let valid = true
     if(input.value.length < min){
         showError(input,`Tem que ter no mínimo ${min} caracteres`)
+        valid = false
     }
-
+    
     else if(input.value.length > max){
         showError(input, `O máximo de caracteres é ${max}`)
+        valid = false
     }
+    return valid
 }
 
 function checkPassword(input1,input2){
+    let valid = true
     if(input1.value != input2.value){
         showError(input2, "As senhas devem ser iguais")
+        valid = false
     }
+
+    return valid
 }
 
 function checkRequired(inputArray){
+    let valid = true
     inputArray.forEach(function(input){
         if(input.value == ""){
             showError(input, "Valor em branco")    
+            valid = false
         }
         else{
             showSucess(input)
         }
     })
 
+    return valid
 
 }
 
@@ -50,8 +61,21 @@ function checkRequired(inputArray){
 form.addEventListener("submit", function(e){
     e.preventDefault()
 
-    checkRequired([username,email,password,password2])
-    checkLength(username,3,5)
-    checkLength(password,3,5)
-    checkPassword(password,password2)
+    let isValid = true
+    isValid = checkRequired([username,email,password,password2])
+    isValid = checkLength(username,3,5) && isValid
+    isValid = checkLength(password,3,5) && isValid
+    isValid = checkPassword(password,password2) && isValid
+
+    if(isValid){
+        const dados = {
+            userName: username.value,
+            userEmail: email.value,
+            userPassword: password.value
+        }
+        console.log(dados)
+
+        window.location.href = "./pages/home.html"
+    }
+
 })
